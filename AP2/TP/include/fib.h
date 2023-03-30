@@ -1,10 +1,12 @@
 #ifndef FIB
 #define FIB
 
+#include <math.h>
+
 typedef struct Fib {
 } Fib;
 
-unsigned long long int recursive_fib (int n);
-unsigned long long int interative_fib (int n);
+unsigned int recursive_fib (int n);
+unsigned int iterative_fib (int n);
 
 #endif

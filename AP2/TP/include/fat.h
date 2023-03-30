@@ -1,10 +1,12 @@
 #ifndef FAT
 #define FAT
 
+#include <math.h>
+
 typedef struct Fat {
 } Fat;
 
-unsigned long long int recursive_fat (int n);
-unsigned long long int interative_fat (int n);
+unsigned int recursive_fat (int n);
+unsigned int iterative_fat (int n);
 
 #endif

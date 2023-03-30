@@ -1,20 +1,26 @@
 #include "fib.h"
 
-unsigned long long int recursive_fib(int n) {
-    if (n < 3)
-        return 1;
+#define DEZ_MILHOES 10000000
 
-    else
+unsigned int recursive_fib(int n) {
+    if (n < 3) return 1;
+    
+    else {
+        // Carga utilizada para aumentar o tempo de execução do algoritmo, de forma que facilite a análise
+        for (int i = 0; i < DEZ_MILHOES; i++) { float k = sin(1); }
         return recursive_fib(n - 1) + recursive_fib(n - 2);
+    }
 }
 
-unsigned long long int interative_fib(int n) {
+unsigned int iterative_fib(int n) {
     int fb1 = 1, fb2 = 1;
-	int fb;
+	unsigned int fb;
 
     if (n < 3) return 1;
 
     for (int i = 3; i <= n; i++) { 
+        // Carga utilizada para aumentar o tempo de execução do algoritmo, de forma que facilite a análise
+        for (int i = 0; i < DEZ_MILHOES; i++) { float k = sin(1); }
         fb = fb2 + fb1;
         fb2 = fb1;
         fb1 = fb;  
