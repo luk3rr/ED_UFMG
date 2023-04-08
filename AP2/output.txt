@@ -1,0 +1,84 @@
+gcc -O0 -Wall -c -Iinclude -o obj/fib.o src/fib.c
+gcc -O0 -Wall -c -Iinclude -o obj/fat.o src/fat.c
+gcc -O0 -Wall -c -Iinclude -o obj/analisador.o src/analisador.c
+gcc -O0 -Wall -c -Iinclude -o obj/main.o src/main.c
+gcc -pg -o bin/executable obj/fib.o obj/fat.o obj/analisador.o obj/main.o -lm
+bin/executable --analyzer
+
+>> ANALISE FATORIAL
+>> MATRIZES
+
+>> Matriz de tempos de execução algoritmo recursivo
+10 | 0.184401,0.188245,0.189604,0.185240,0.185832,0.213380,
+11 | 0.213380,0.209868,0.218796,0.216751,0.206774,0.232327,
+12 | 0.232327,0.219514,0.236019,0.236483,0.221764,0.220943,
+
+>> Matriz de tempos de execução algoritmo interativo
+10 | 0.192389,0.195424,0.195473,0.193254,0.193810,0.209254,
+11 | 0.209254,0.210360,0.210450,0.211318,0.217649,0.226644,
+12 | 0.226644,0.223992,0.219756,0.218437,0.217122,0.228096,
+
+>> MEDIAS
+
+>> Medias recursivo
+10 | 0.186664
+11 | 0.213114
+12 | 0.229221
+
+>> Medias interativo
+10 | 0.194070
+11 | 0.211806
+12 | 0.221190
+
+
+>> VARIANCIAS
+
+>> Variâncias recursivo
+10 | 0.000005
+11 | 0.000024
+12 | 0.000065
+
+>> Variâncias interativo
+10 | 0.000002
+11 | 0.000011
+12 | 0.000016
+
+-----------------------------------------
+>> ANALISE FIBONACCI
+>> MATRIZES
+
+>> Matriz de tempos de execução algoritmo recursivo
+10 | 0.989729,0.992045,0.991055,0.997043,0.996256,1.646517,
+11 | 1.646517,1.613902,1.621556,1.627906,1.622386,2.648547,
+12 | 2.648547,2.682902,2.688534,2.713868,2.734778,2.715173,
+
+>> Matriz de tempos de execução algoritmo interativo
+10 | 0.147781,0.147422,0.146017,0.145250,0.145448,0.168884,
+11 | 0.168884,0.168289,0.167928,0.164259,0.165240,0.193790,
+12 | 0.193790,0.185912,0.191256,0.193724,0.190714,0.191927,
+
+>> MEDIAS
+
+>> Medias recursivo
+10 | 0.993226
+11 | 1.626453
+12 | 2.693726
+
+>> Medias interativo
+10 | 0.146384
+11 | 0.166920
+12 | 0.191079
+
+
+>> VARIANCIAS
+
+>> Variâncias recursivo
+10 | 0.000011
+11 | 0.000151
+12 | 0.001069
+
+>> Variâncias interativo
+10 | 0.000001
+11 | 0.000004
+12 | 0.000010
+

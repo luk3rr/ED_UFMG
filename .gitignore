@@ -1,6 +1,4 @@
 *.o
 *.out
+**/bin/
 *.zip
-*.pdf
-*output.txt
-*.dat
