@@ -1,0 +1,47 @@
+Ao utilizar a ferramenta valgrind, constatei que havia uma tentativa de escrita inválida:
+
+==1255026== Memcheck, a memory error detector
+==1255026== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==1255026== Using Valgrind-3.20.0 and LibVEX; rerun with -h for copyright info
+==1255026== Command: ./a.out
+==1255026==
+==1255026== Invalid write of size 4
+==1255026==    at 0x109194: main (c1.c:10)
+==1255026==  Address 0x4a67068 is 0 bytes after a block of size 40 alloc'd
+==1255026==    at 0x4841888: malloc (vg_replace_malloc.c:393)
+==1255026==    by 0x109161: main (c1.c:6)
+==1255026==
+==1255026==
+==1255026== HEAP SUMMARY:
+==1255026==     in use at exit: 0 bytes in 0 blocks
+==1255026==   total heap usage: 1 allocs, 1 frees, 40 bytes allocated
+==1255026==
+==1255026== All heap blocks were freed -- no leaks are possible
+==1255026==
+==1255026== For lists of detected and suppressed errors, rerun with: -s
+==1255026== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+
+No código foi identificado que o ponteiro 'a' era alocado com o espaço de 10 inteiros (10 * 4
+bytes), mas no loop ocorria a tentativa de atribuir um 11o inteiro. Dessa forma, o erro de
+escrita inválida era provocado.
+
+Duas formas de solucionar esse problema são:
+1. Aumentar o espaço reservado no array 'a'; ou
+2. Diminuir para 10 a quantidade de vezes que a variável 'i' é incrementada.
+
+Optei pela primeira solução e o output do valgrind após a alteração foi o que segue:
+
+==1314763== Memcheck, a memory error detector
+==1314763== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==1314763== Using Valgrind-3.20.0 and LibVEX; rerun with -h for copyright info
+==1314763== Command: ./a.out
+==1314763==
+==1314763==
+==1314763== HEAP SUMMARY:
+==1314763==     in use at exit: 0 bytes in 0 blocks
+==1314763==   total heap usage: 1 allocs, 1 frees, 44 bytes allocated
+==1314763==
+==1314763== All heap blocks were freed -- no leaks are possible
+==1314763==
+==1314763== For lists of detected and suppressed errors, rerun with: -s
+==1314763== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

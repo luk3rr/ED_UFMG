@@ -1,0 +1,70 @@
+De imediato a saída do valgrind foi a que segue:
+
+==2278704== Memcheck, a memory error detector
+==2278704== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==2278704== Using Valgrind-3.20.0 and LibVEX; rerun with -h for copyright info
+==2278704== Command: ./a.out
+==2278704==
+Positive integer:10
+==2278704== Conditional jump or move depends on uninitialised value(s)
+==2278704==    at 0x48D69A8: __printf_buffer (vfprintf-process-arg.c:58)
+==2278704==    by 0x48D72A1: __vfprintf_internal (vfprintf-internal.c:1459)
+==2278704==    by 0x48CCEAE: printf (printf.c:33)
+==2278704==    by 0x1091D9: main (c14.c:12)
+==2278704==
+==2278704== Use of uninitialised value of size 8
+==2278704==    at 0x48CC12B: _itoa_word (_itoa.c:177)
+==2278704==    by 0x48D5ABD: __printf_buffer (vfprintf-process-arg.c:155)
+==2278704==    by 0x48D72A1: __vfprintf_internal (vfprintf-internal.c:1459)
+==2278704==    by 0x48CCEAE: printf (printf.c:33)
+==2278704==    by 0x1091D9: main (c14.c:12)
+==2278704==
+==2278704== Conditional jump or move depends on uninitialised value(s)
+==2278704==    at 0x48CC13C: _itoa_word (_itoa.c:177)
+==2278704==    by 0x48D5ABD: __printf_buffer (vfprintf-process-arg.c:155)
+==2278704==    by 0x48D72A1: __vfprintf_internal (vfprintf-internal.c:1459)
+==2278704==    by 0x48CCEAE: printf (printf.c:33)
+==2278704==    by 0x1091D9: main (c14.c:12)
+==2278704==
+==2278704== Conditional jump or move depends on uninitialised value(s)
+==2278704==    at 0x48D5B09: __printf_buffer (vfprintf-process-arg.c:186)
+==2278704==    by 0x48D72A1: __vfprintf_internal (vfprintf-internal.c:1459)
+==2278704==    by 0x48CCEAE: printf (printf.c:33)
+==2278704==    by 0x1091D9: main (c14.c:12)
+==2278704==
+Factorial 10 = 0
+==2278704==
+==2278704== HEAP SUMMARY:
+==2278704==     in use at exit: 0 bytes in 0 blocks
+==2278704==   total heap usage: 2 allocs, 2 frees, 2,048 bytes allocated
+==2278704==
+==2278704== All heap blocks were freed -- no leaks are possible
+==2278704==
+==2278704== Use --track-origins=yes to see where uninitialised values come from
+==2278704== For lists of detected and suppressed errors, rerun with: -s
+==2278704== ERROR SUMMARY: 4 errors from 4 contexts (suppressed: 0 from 0)
+
+Erros encontrados:
+1. fact era declarado mas não inicializado antes da tentativa de usá-lo.
+2. a função calculava o fatorial de número negativo.
+
+As correções foram feitas e a saída foi a seguinte:
+
+==2316383== Memcheck, a memory error detector
+==2316383== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==2316383== Using Valgrind-3.20.0 and LibVEX; rerun with -h for copyright info
+==2316383== Command: ./a.out
+==2316383==
+Positive integer:10
+Factorial 10 = 3628800
+==2316383==
+==2316383== HEAP SUMMARY:
+==2316383==     in use at exit: 0 bytes in 0 blocks
+==2316383==   total heap usage: 2 allocs, 2 frees, 2,048 bytes allocated
+==2316383==
+==2316383== All heap blocks were freed -- no leaks are possible
+==2316383==
+==2316383== For lists of detected and suppressed errors, rerun with: -s
+==2316383== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+Para entradas com valores negativos, o programa imprimi uma mensagem e termina.

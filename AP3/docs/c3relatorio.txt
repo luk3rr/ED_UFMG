@@ -1,0 +1,51 @@
+De início, a saída do valgrind foi a seguinte:
+
+==1470634== Memcheck, a memory error detector
+==1470634== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==1470634== Using Valgrind-3.20.0 and LibVEX; rerun with -h for copyright info
+==1470634== Command: ./a.out
+==1470634==
+==1470634==
+==1470634== HEAP SUMMARY:
+==1470634==     in use at exit: 3,600 bytes in 9 blocks
+==1470634==   total heap usage: 10 allocs, 1 frees, 4,000 bytes allocated
+==1470634==
+==1470634== 3,600 bytes in 9 blocks are definitely lost in loss record 1 of 1
+==1470634==    at 0x4841888: malloc (vg_replace_malloc.c:393)
+==1470634==    by 0x10916A: main (c3.c:9)
+==1470634==
+==1470634== LEAK SUMMARY:
+==1470634==    definitely lost: 3,600 bytes in 9 blocks
+==1470634==    indirectly lost: 0 bytes in 0 blocks
+==1470634==      possibly lost: 0 bytes in 0 blocks
+==1470634==    still reachable: 0 bytes in 0 blocks
+==1470634==         suppressed: 0 bytes in 0 blocks
+==1470634==
+==1470634== For lists of detected and suppressed errors, rerun with: -s
+==1470634== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+
+O problema do código era que a liberação do espaço alocado estava sendo feito fora do escopo do
+loop. Dessa maneira, após o loop finalizar, o ponteiro 'a' armazenava o endereço de memória
+alocado apenas pelo último malloc. Portanto, todos os espaços alocados pelos 9 malloc anteriores
+eram definitivamente perdidos.
+
+Duas soluções são possíveis:
+1. mover o free para dentro do loop e após o malloc. Assim a cada iteração do 'i' o espaço é alocado e liberado; ou
+2. modificar o ponteiro 'a' para que seja um vetor de ponteiro com 10 posições (número de iterações da variável 'i'). Dessa maneira, todos os espaços podem ser alocados sem que seus endereços se percam a cada iteração. No final, apenas adicionamos outro loop para liberar cada endereço alocado.
+
+Após qualquer uma das alterações, a saída do valgrind é a que segue:
+
+==1526425== Memcheck, a memory error detector
+==1526425== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==1526425== Using Valgrind-3.20.0 and LibVEX; rerun with -h for copyright info
+==1526425== Command: ./a.out
+==1526425==
+==1526425==
+==1526425== HEAP SUMMARY:
+==1526425==     in use at exit: 0 bytes in 0 blocks
+==1526425==   total heap usage: 10 allocs, 10 frees, 4,000 bytes allocated
+==1526425==
+==1526425== All heap blocks were freed -- no leaks are possible
+==1526425==
+==1526425== For lists of detected and suppressed errors, rerun with: -s
+==1526425== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

@@ -1,0 +1,68 @@
+De início, a saída do valgrind foi a que segue:
+
+==1743244== Memcheck, a memory error detector
+==1743244== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==1743244== Using Valgrind-3.20.0 and LibVEX; rerun with -h for copyright info
+==1743244== Command: ./a.out
+==1743244==
+==1743244== Invalid free() / delete / delete[] / realloc()
+==1743244==    at 0x484426F: free (vg_replace_malloc.c:884)
+==1743244==    by 0x1091DD: main (c6.c:21)
+==1743244==  Address 0x4a67090 is 0 bytes inside a block of size 40 free'd
+==1743244==    at 0x4846CC3: realloc (vg_replace_malloc.c:1451)
+==1743244==    by 0x109180: resizeArray (c6.c:12)
+==1743244==    by 0x1091CA: main (c6.c:19)
+==1743244==  Block was alloc'd at
+==1743244==    at 0x4846A73: calloc (vg_replace_malloc.c:1340)
+==1743244==    by 0x1091B4: main (c6.c:18)
+==1743244==
+==1743244==
+==1743244== HEAP SUMMARY:
+==1743244==     in use at exit: 60 bytes in 1 blocks
+==1743244==   total heap usage: 3 allocs, 3 frees, 116 bytes allocated
+==1743244==
+==1743244== 60 bytes in 1 blocks are definitely lost in loss record 1 of 1
+==1743244==    at 0x4846CC3: realloc (vg_replace_malloc.c:1451)
+==1743244==    by 0x109180: resizeArray (c6.c:12)
+==1743244==    by 0x1091CA: main (c6.c:19)
+==1743244==
+==1743244== LEAK SUMMARY:
+==1743244==    definitely lost: 60 bytes in 1 blocks
+==1743244==    indirectly lost: 0 bytes in 0 blocks
+==1743244==      possibly lost: 0 bytes in 0 blocks
+==1743244==    still reachable: 0 bytes in 0 blocks
+==1743244==         suppressed: 0 bytes in 0 blocks
+==1743244==
+==1743244== For lists of detected and suppressed errors, rerun with: -s
+==1743244== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+
+Todos esses problemas eram causados pela forma como a função resizeArray fazia a realocação do
+ponteiro 'data' da struct array.
+
+1. Era declaro outro ponteiro intermediário dPtr que apontava para o array->data, e dPtr era
+passado como parâmetro para a função realloc. Mas isso é desnecessário, uma vez que você poderia
+passar 'array->data' diretamente como parâmetro.
+
+2. Além disso, dPtr recebia o próprio ponteiro retornado pelo função realloc. Entretanto, a função retorna o ponteiro para 'List' array, aquela que foi passada como parâmetro. Portanto, a conversão era feita, mas não retornada.
+
+A forma de corrigir isso foi deletar o ponteiro dPtr, além de receber o retorno da função realloc com o ponteiro 'array->data'. Dessa maneira, a conversão ocorrerá e será perceptível quando 'array' for retornado.
+
+A saída do valgrind, após tais alterações, foi a seguinte:
+
+==1938142== Memcheck, a memory error detector
+==1938142== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==1938142== Using Valgrind-3.20.0 and LibVEX; rerun with -h for copyright info
+==1938142== Command: ./a.out
+==1938142==
+==1938142==
+==1938142== HEAP SUMMARY:
+==1938142==     in use at exit: 0 bytes in 0 blocks
+==1938142==   total heap usage: 3 allocs, 3 frees, 116 bytes allocated
+==1938142==
+==1938142== All heap blocks were freed -- no leaks are possible
+==1938142==
+==1938142== For lists of detected and suppressed errors, rerun with: -s
+==1938142== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+2.
+    int32_t* dPtr = array->data;
