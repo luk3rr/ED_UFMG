@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-// utilizo uint64_t, pois o maior inteiro que esse tipo armazena tem 19 casas demais, o suficiente
+// utilizo uint64_t, pois o maior inteiro que esse tipo armazena tem 19 casas decimais, o suficiente
 // para armazenar o valor da soma no pior caso especificado adiante.
 uint64_t sum_to_n_gauss(int num) {
   return ((uint64_t)num * (num + 1))/2;
